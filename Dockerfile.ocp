@@ -7,17 +7,14 @@ COPY package.json /opt/app-root/src
 RUN npm install
 
 COPY . /opt/app-root/src
+RUN ng build --configuration production
 
-ENTRYPOINT []
+# Stage 2: serve it with nginx
+FROM registry.access.redhat.com/ubi8/nginx-120 AS deploy
+COPY --from=builder /opt/app-root/src/dist/* .
+
+USER 1001
+EXPOSE 8080
+
 CMD ["/bin/sh",  "-c",  "echo 'good morning!'"]
-
-# FROM registry.access.redhat.com/ubi8/nginx-120
-# 
-# COPY --from=build . ./
-
-# Override parent node image's entrypoint script (/usr/local/bin/docker-entrypoint.sh),
-# which tries to run CMD as a node command
-# ENTRYPOINT []
-# CMD ["./build_and_start_nginx.sh"]
-# 
 

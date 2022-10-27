@@ -1,12 +1,12 @@
 # Stage 1: build the app
 
-FROM registry.access.redhat.com/ubi8/nodejs-14 as build
-WORKDIR /src/build-your-own-radar
-COPY package.json ./
+FROM registry.access.redhat.com/ubi8/nodejs-14 AS builder
+WORKDIR /opt/app-root/src
+COPY package.json /opt/app-root/src
 
 RUN npm install
 
-COPY . ./
+COPY . /opt/app-root/src
 
 ENTRYPOINT []
 CMD ["echo", "good morning!"]

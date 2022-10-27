@@ -4,8 +4,8 @@ FROM registry.access.redhat.com/ubi8/nodejs-14 AS builder
 WORKDIR /opt/app-root/src
 COPY package.json /opt/app-root/src
 USER root
-RUN yum update -y
-RUN npm install -g
+RUN yum update && yum install npm -y 
+RUN npm -v && npm install -g
 
 COPY . /opt/app-root/src
 

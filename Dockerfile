@@ -7,7 +7,7 @@ RUN yum update -y
 RUN npm -v && npm install -g
 
 COPY . /opt/app-root/src
-RUN npm run build
+# RUN npm run build
 
 # FROM registry.access.redhat.com/ubi8/nginx-120
 # COPY --from=build /opt/app-root/src/dist/* .
@@ -15,5 +15,5 @@ RUN npm run build
 USER 1001
 EXPOSE 8080
 
-CMD ["/bin/bash",  "-c",  "echo 'good morning!'"]
+CMD ["/bin/bash",  "-c",  "sleep infinity"]
 

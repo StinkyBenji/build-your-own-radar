@@ -8,10 +8,6 @@ RUN npm install -g
 
 COPY . /opt/app-root/src
 
-# Stage 2: serve it with nginx
-FROM registry.access.redhat.com/ubi8/nginx-120 AS deploy
-COPY --from=builder /opt/app-root/src/dist/* .
-
 USER 1001
 EXPOSE 8080
 

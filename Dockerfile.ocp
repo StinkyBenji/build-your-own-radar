@@ -4,10 +4,9 @@ FROM registry.access.redhat.com/ubi8/nodejs-14 AS builder
 WORKDIR /opt/app-root/src
 COPY package.json /opt/app-root/src
 
-RUN npm install
+RUN npm install -g
 
 COPY . /opt/app-root/src
-RUN ng build --configuration production
 
 # Stage 2: serve it with nginx
 FROM registry.access.redhat.com/ubi8/nginx-120 AS deploy
@@ -16,5 +15,5 @@ COPY --from=builder /opt/app-root/src/dist/* .
 USER 1001
 EXPOSE 8080
 
-CMD ["/bin/sh",  "-c",  "echo 'good morning!'"]
+CMD ["/bin/bash",  "-c",  "echo 'good morning!'"]
 

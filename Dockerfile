@@ -1,22 +1,16 @@
-FROM nginx:1.23.0
+# Stage 1: build the app
 
-RUN apt-get update && apt-get upgrade -y
+FROM registry.access.redhat.com/ubi8/nodejs-14 AS builder
+WORKDIR /opt/app-root/src
+COPY package.json /opt/app-root/src
+USER root
+RUN yum update -y
+RUN npm install -g
 
-RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
-RUN apt-get install -y nodejs
+COPY . /opt/app-root/src
 
-RUN                                                                       \
-  apt-get install -y                                                      \
-  libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3    \
-  libxss1 libasound2 libxtst6 xauth xvfb g++ make
+USER 1001
+EXPOSE 8080
 
-WORKDIR /src/build-your-own-radar
-COPY package.json ./
-RUN npm install
+CMD ["/bin/bash",  "-c",  "echo 'good morning!'"]
 
-COPY . ./
-
-# Override parent node image's entrypoint script (/usr/local/bin/docker-entrypoint.sh),
-# which tries to run CMD as a node command
-ENTRYPOINT []
-CMD ["./build_and_start_nginx.sh"]

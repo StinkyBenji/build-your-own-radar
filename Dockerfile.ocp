@@ -9,7 +9,8 @@ RUN npm install
 COPY . /opt/app-root/src
 
 ENTRYPOINT []
-CMD ["echo", "good morning!"]
+CMD ["/bin/sh",  "-c",  "echo 'good morning!'"]
+
 # FROM registry.access.redhat.com/ubi8/nginx-120
 # 
 # COPY --from=build . ./

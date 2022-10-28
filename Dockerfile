@@ -1,19 +1,20 @@
-# Stage 1: build the app
-FROM registry.access.redhat.com/ubi8/nodejs-16 AS builder
-WORKDIR /opt/app-root/src
-COPY package.json /opt/app-root/src
-USER root
-RUN yum update -y 
-RUN npm -v && npm install -g
+FROM registry.access.redhat.com/ubi8/nodejs-16 AS build
 
-COPY . /opt/app-root/src
-# RUN npm run build
+WORKDIR /src/build-your-own-radar
+COPY package.json /src/build-your-own-radar
+RUN npm install
 
-# FROM registry.access.redhat.com/ubi8/nginx-120
-# COPY --from=build /opt/app-root/src/dist/* .
-
+COPY --chown=1001 . /src/build-your-own-radar
 USER 1001
-EXPOSE 8080
+RUN npm run build:prod
 
-CMD ["/bin/bash",  "-c",  "sleep infinity"]
+FROM registry.access.redhat.com/ubi8/nginx-120 
+USER root
+RUN mkdir -p /opt/build-your-own-radar/files
 
+WORKDIR /opt/build-your-own-radar
+COPY --from=build /src/build-your-own-radar/dist/* .
+COPY --from=build /src/build-your-own-radar/spec/end_to_end_tests/resources/localfiles/* ./files/
+COPY --from=build /src/build-your-own-radar/default.template /etc/nginx/conf.d/default.conf
+
+CMD nginx -g "daemon off;"

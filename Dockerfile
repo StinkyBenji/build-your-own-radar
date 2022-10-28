@@ -15,6 +15,7 @@ RUN mkdir -p /opt/build-your-own-radar/files
 WORKDIR /opt/build-your-own-radar
 COPY --from=build /src/build-your-own-radar/dist/* .
 COPY --from=build /src/build-your-own-radar/spec/end_to_end_tests/resources/localfiles/* ./files/
-COPY --from=build /src/build-your-own-radar/default.template /etc/nginx/conf.d/default.conf
-
+COPY --from=build /src/build-your-own-radar/default.template /etc/nginx/nginx.conf
+RUN  chown -R 1001:0 /opt/build-your-own-radar  &&  chmod -R g=u /opt/build-your-own-radar
+USER 1001
 CMD nginx -g "daemon off;"
